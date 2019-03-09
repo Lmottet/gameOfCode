@@ -1,5 +1,7 @@
 (ns graphics.canvas)
 
+(defn request-animation-frame [f] (js/requestAnimationFrame f))
+
 (defn get-canvas
   "input: canvas html id (string)
    returns: canvas DOM element"

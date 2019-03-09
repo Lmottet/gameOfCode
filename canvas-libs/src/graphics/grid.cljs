@@ -32,6 +32,9 @@
   (black c)
   (.fillRect c xa ya w h))
 
+(defn draw-character
+  [c [x y] s] (.drawImage c (sprites/hit true) 0 0 s s x y s s))
+
 (defn draw-gamers
   "input: ctx and the world
    effect: draws gamers on their board case"
@@ -41,12 +44,12 @@
         colW (:col-w wld)
         rowH (:row-h wld)
         gamers (actions/all-gamers (:actions wld))
-        sBrute (:size sprites/BRUTE)]
+        sBrute (:size sprites/BRUTE)
+        shownActions (:shown-actions wld)]
     (black c)
-    (.drawImage c (sprites/hit true) 0 0 sBrute sBrute 0 0 colW rowH)))
-    ;(doall (for [pos gamers]
-    ;         (let [A (to-pixels-point pos colW rowH)]
-    ;           (color-case c A colW rowH))))))
+    (doall (for [action shownActions]
+             (let [target (:Target action)]
+               (draw-character c (to-pixels-point [(dec (:X target)) (dec (:Y target))] colW rowH) sBrute))))))
 
 (defn draw-grid
   "input: ctx and the world

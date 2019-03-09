@@ -1,5 +1,5 @@
 (ns graphics.grid
-  (:require [graphics.board :refer [to-pixels-point]]
+  (:require [graphics.board :refer [to-pixels-point get-2d]]
             [game.actions :as actions]
             [graphics.sprites :as sprites]))
 
@@ -38,16 +38,22 @@
   [c world]
   (let [wld @world
         board (:board wld)
+        nCols (:n-cols wld)
         colW (:col-w wld)
         rowH (:row-h wld)
         gamers (actions/all-gamers (:actions wld))
         sBrute (:size sprites/BRUTE)
         sAdventurer (:size sprites/ADVENTURER)
         wDwarf (:w sprites/DWARF)
-        hDwarf (:h sprites/DWARF)]
+        hDwarf (:h sprites/DWARF)
+        sTile (:size sprites/TILE)]
 
     (black c)
-    (.drawImage c (sprites/dwarfstand true) 0 0 sBrute sBrute 0 0 colW rowH)))
+    (doall (for [i (range 0 (count board))]
+                (let [[x y] (get-2d i nCols)]
+                  (.drawImage c (sprites/showdirt) 0 0 sTile sTile (* x 25) (* y 25) colW rowH))))
+
+    (.drawImage c (sprites/adventurerstand true) 0 0 sAdventurer sAdventurer 0 0 colW rowH)))
     ;(doall (for [pos gamers]
     ;         (let [A (to-pixels-point pos colW rowH)]
     ;           (color-case c A colW rowH))))))

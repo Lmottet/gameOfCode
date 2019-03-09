@@ -1,5 +1,6 @@
 (ns graphics.sprites)
 
+(def TILE {:size 34})
 (def BRUTE {:size 27})
 (def DWARF {:w 32 :h 19})
 (def ADVENTURER {:size 24})
@@ -9,6 +10,15 @@
   (let [img (js/Image. src)]
     (set! (.-src img) src)
     img))
+
+"dirt"
+(defn showdirt
+      []
+      (load-img "sprites/tiles/Dirt.png"))
+"water"
+(defn showWater
+      []
+      (load-img "sprites/tiles/Water.png"))
 
 "brute"
 (defn brutehit

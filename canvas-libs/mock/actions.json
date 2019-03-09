@@ -1,0 +1,26 @@
+{
+  "Rounds": [
+    {
+      "RoundActions": [
+        {
+          "PlayerId": 1,
+          "ActionType": 0,
+          "Target": {
+            "X": 1,
+            "Y": 1
+          },
+          "Direction": 0
+        },
+        {
+          "PlayerId": 2,
+          "ActionType": 0,
+          "Target": {
+            "X": 10,
+            "Y": 10
+          },
+          "Direction": 0
+        }
+      ]
+    }
+  ]
+}

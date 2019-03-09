@@ -1,10 +1,7 @@
 (ns graphics.grid
-  (:require
-    [graphics.canvas :refer [request-animation-frame
-                             get-canvas get-ctx]]
-    [graphics.board :as b]))
+  (:require [graphics.board :refer [get-point]]))
 
-(def fst #(first %))
+(def fst #(get % 0))
 (def snd #(get % 1))
 
 (defn draw-line
@@ -23,63 +20,74 @@
 (defn draw-lines
   "input: ctx, start iteration and lines vector
    effect: draws all given lines"
-  [c iteration linesToDraw]
-  (loop [i iteration
-         lines linesToDraw]
-    (let [line (peek lines)
-          a (fst line)
-          b (snd line)]
-      (draw-line c a b))
-    (if (> (count lines) 0)
-      (recur (dec i) (pop lines)))))
+  [c lines]
+  (doall (for [[a b] lines] (draw-line c a b))))
+
+(defn color-case
+  "input: ctx, two points with real pixels
+   effect: fills the rectangle from this two points"
+  [c [xa ya] [xb yb]]
+  (black c)
+  (.fillRect c xa ya xb yb))
+
+(defn draw-gamers
+  "input: ctx and the world
+   effect: draws gamers on their board case"
+  [c world]
+  (let [wld @world
+        board (:board wld)
+        colW (:col-w wld)
+        rowH (:row-h wld)
+        gamers (:gamers wld)]
+    (doall (for [pos gamers]
+                (let [A (get-point board pos colW rowH)
+                      [xa ya] A
+                      B [(+ xa colW) (+ ya rowH)]]
+                  (color-case c A B))))))
 
 (defn draw-grid
-  "input: ctx, number of rows & cols for grid
+  "input: ctx and the world
    effect: draws the grid on the context"
-  [c nRows nCols]
-  (let [colW (b/column-width nCols (.-w c))
-        rowH (b/row-height nRows (.-h c))
-        colLines (b/generate-columns (.-h c) nCols colW)
-        rowLines (b/generate-rows (.-w c) nRows rowH)]
+  [c world]
+  (let [wld @world
+        cw (:c-w wld)
+        ch (:c-h wld)
+        nCols (:n-cols wld)
+        nRows (:n-rows wld)
+        colW (:col-w wld)
+        rowH (:row-h wld)
+        rowLines (:row-lines wld)
+        colLines (:col-lines wld)]
 
     ; draw axis lines
     (bold-line-width c)
     (black c)
-    (draw-line c [0 0] [(.-w c) 0]) ; col
-    (draw-line c [0 0] [0 (.-h c)]) ; row
+    (draw-line c [0 0] [cw 0]) ; col
+    (draw-line c [0 0] [0 ch]) ; row
 
     ; draw cols & rows
     (medium-line-width c)
-    (draw-lines c (dec nCols) colLines)
-    (draw-lines c (dec nRows) rowLines)))
+    (draw-lines c colLines)
+    (draw-lines c rowLines)))
+
+(defn request-animation-frame [f] (js/requestAnimationFrame f))
 
 (defn render
   "input: ctx, number of grid columns and rows"
-  [c nCols nRows]
+  [c world]
   ; clear canvas
   (white c)
-  (.clearRect c 0 0 (.-w c) (.-h c))
+  (.clearRect c 0 0 (:c-w @world) (:c-h @world))
   ; draw grid
-  (draw-grid c nCols nRows))
+  (draw-grid c world)
+  (draw-gamers c world))
 
+(defn start
+  "input: ctx, number of columns and rows
+   effect: renders game animation on the canvas"
+  [c world]
 
-(defn animate
-  "input: ctx, number of grid columns and rows
-   effect: request animation frame"
-  [c nCols nRows]
   (request-animation-frame
     (fn lo []
-      (request-animation-frame lo)
-      (render c nCols nRows))))
-
-(defn startGame
-  "input: id of canvas element, number of grid columns and rows
-   effect: renders game animation on the canvas"
-  [canvasId nCols nRows]
-  (let [canvas (get-canvas canvasId)
-        c (get-ctx canvas)]
-    ; set canvas width and height
-    (set! (.-w c) (.-width canvas))
-    (set! (.-h c) (.-height canvas))
-    ; run canvas animation
-    (animate c nCols nRows)))
+      (js/setTimeout (request-animation-frame lo) 1000)
+      (render c world))))

@@ -10,6 +10,7 @@
 (def N_ROWS 20)
 
 (def world (atom {:actions []
+                  :shown-actions nil
                   :col-lines []
                   :row-lines []
                   :col-w 0
@@ -31,8 +32,13 @@
 
   (println msg)
 
-  (get-actions (fn [resp] (swap! world assoc :actions (:body resp))))
-  ;(js/setInterval #(println (:actions @world)) 1000)
+  (get-actions (fn [resp]
+                   (swap! world assoc :actions (:body resp))
+                   (doall (for [i (range 0 (count (:actions @world)))] ; number of iterations needed
+                            (js/setTimeout
+                              (fn []
+                                  (swap! world assoc :shown-actions (:RoundActions (get (:actions @world) i))))
+                              (* i 2000))))))
 
   (let [canvas (get-canvas "drawing1")
         c (get-ctx canvas)

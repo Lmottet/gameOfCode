@@ -32,6 +32,9 @@
   (black c)
   (.fillRect c xa ya w h))
 
+(defn draw-character
+  [c [x y] s] (.drawImage c (sprites/brutehit true) 0 0 s s x y s s))
+
 (defn draw-gamers
   "input: ctx and the world
    effect: draws gamers on their board case"
@@ -46,18 +49,15 @@
         sAdventurer (:size sprites/ADVENTURER)
         wDwarf (:w sprites/DWARF)
         hDwarf (:h sprites/DWARF)
-        sTile (:size sprites/TILE)]
-
+        sTile (:size sprites/TILE)
+        shownActions (:shown-actions wld)]
     (black c)
     (doall (for [i (range 0 (count board))]
                 (let [[x y] (get-2d i nCols)]
-                  (.drawImage c (sprites/showdirt) 0 0 sTile sTile (* x 25) (* y 25) colW rowH))))
-
-    (.drawImage c (sprites/adventurerstand true) 0 0 sAdventurer sAdventurer 0 0 colW rowH)))
-    ;(doall (for [pos gamers]
-    ;         (let [A (to-pixels-point pos colW rowH)]
-    ;           (color-case c A colW rowH))))))
-
+                 (.drawImage c (sprites/showdirt) 0 0 sTile sTile (* x 25) (* y 25) colW rowH))))
+    (doall (for [action shownActions]
+            (let [target (:Target action)]
+                (draw-character c (to-pixels-point [(dec (:X target)) (dec (:Y target))] colW rowH) sBrute))))))
 (defn draw-grid
   "input: ctx and the world
    effect: draws the grid on the context"

@@ -1,0 +1,5 @@
+.vs
+.idea
+.nrepl-port
+.shadow-cljs
+target

@@ -1,0 +1,20 @@
+;; shadow-cljs configuration
+{:source-paths ["src"]
+
+ :dependencies [[reagent "0.8.1"]]
+
+ :dev-http {8080 "target/"}
+
+ :builds {:app {:output-dir "target/"
+                :asset-path "."
+                :target :browser
+                :modules {:gx_board {:entries [graphics.board]}
+                          :gx_canvas {:entries [graphics.canvas]
+                                      :depends-on #{:gx_board}}
+                          :gx_grid {:entries [graphics.grid]
+                                    :depends-on #{:gx_canvas :gx_board}}
+                          :main {:init-fn app.main/main
+                                 :depends-on #{:gx_board :gx_grid :gx_canvas}}}
+                :devtools {:after-load app.main/reload!
+                           :http-root "target"
+                           :http-port 8080}}}}

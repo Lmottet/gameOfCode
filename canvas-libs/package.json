@@ -1,0 +1,13 @@
+{
+  "name": "game-of-code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "assets": "cp ./assets/* target/",
+    "dev": "shadow-cljs watch app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Rueda",
+  "license": "ISC"
+}

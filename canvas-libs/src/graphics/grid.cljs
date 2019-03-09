@@ -41,9 +41,13 @@
         colW (:col-w wld)
         rowH (:row-h wld)
         gamers (actions/all-gamers (:actions wld))
-        sBrute (:size sprites/BRUTE)]
+        sBrute (:size sprites/BRUTE)
+        sAdventurer (:size sprites/ADVENTURER)
+        wDwarf (:w sprites/DWARF)
+        hDwarf (:h sprites/DWARF)]
+
     (black c)
-    (.drawImage c (sprites/hit true) 0 0 sBrute sBrute 0 0 colW rowH)))
+    (.drawImage c (sprites/dwarfstand true) 0 0 sBrute sBrute 0 0 colW rowH)))
     ;(doall (for [pos gamers]
     ;         (let [A (to-pixels-point pos colW rowH)]
     ;           (color-case c A colW rowH))))))

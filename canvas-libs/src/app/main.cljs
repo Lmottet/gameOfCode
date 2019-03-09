@@ -1,8 +1,8 @@
 (ns app.main
   (:require [graphics.grid :refer [startGame]]))
 
-(def N_COLS 20)
-(def N_ROWS 20)
+(def N_COLS 15)
+(def N_ROWS 15)
 
 (defn reload!
   []

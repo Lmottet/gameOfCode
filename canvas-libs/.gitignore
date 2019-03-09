@@ -3,3 +3,4 @@
 .nrepl-port
 .shadow-cljs
 target
+package-lock.json

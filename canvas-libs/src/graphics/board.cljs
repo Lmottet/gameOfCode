@@ -15,6 +15,12 @@
   [nRows height]
   (/ height nRows))
 
+(defn to-pixels-point
+  "input: index point, column and row width/height
+   returns: same point with pixel values computed"
+  [[x y] colW rowH]
+  [(* x colW) (* y rowH)])
+
 (defn get-point
   "input: list of board points, desired index, column width and row height
    returns: the pixel-valued point for the given index"

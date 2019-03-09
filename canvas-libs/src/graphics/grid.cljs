@@ -1,5 +1,5 @@
 (ns graphics.grid
-  (:require [graphics.board :refer [get-point]]))
+  (:require [graphics.board :refer [to-pixels-point]]))
 
 (def fst #(get % 0))
 (def snd #(get % 1))
@@ -26,9 +26,9 @@
 (defn color-case
   "input: ctx, two points with real pixels
    effect: fills the rectangle from this two points"
-  [c [xa ya] [xb yb]]
+  [c [xa ya] w h]
   (black c)
-  (.fillRect c xa ya xb yb))
+  (.fillRect c xa ya w h))
 
 (defn draw-gamers
   "input: ctx and the world
@@ -40,10 +40,8 @@
         rowH (:row-h wld)
         gamers (:gamers wld)]
     (doall (for [pos gamers]
-                (let [A (get-point board pos colW rowH)
-                      [xa ya] A
-                      B [(+ xa colW) (+ ya rowH)]]
-                  (color-case c A B))))))
+                (let [A (to-pixels-point pos colW rowH)]
+                  (color-case c A colW rowH))))))
 
 (defn draw-grid
   "input: ctx and the world

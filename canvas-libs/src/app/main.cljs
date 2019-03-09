@@ -1,12 +1,15 @@
 (ns app.main
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [graphics.grid :refer [start]]
             [graphics.canvas :refer [get-canvas get-ctx]]
-            [graphics.board :as b]))
+            [graphics.board :as b]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]]))
 
 (def N_COLS 20)
 (def N_ROWS 20)
 
-(def world (atom {:gamers [[2 7] [4 1]]
+(def world (atom {:actions []
                   :col-lines []
                   :row-lines []
                   :col-w 0
@@ -17,10 +20,19 @@
                   :n-rows N_ROWS
                   :board []}))
 
-(defn restart
+(defn get-actions
+  [cb]
+  (go
+    (let [response (<! (http/get "http://localhost:3000/Rounds"))]
+      (cb response))))
+
+(defn run
   [msg]
 
   (println msg)
+
+  (get-actions (fn [resp] (swap! world assoc :actions (:body resp))))
+  ;(js/setInterval #(println (:actions @world)) 1000)
 
   (let [canvas (get-canvas "drawing1")
         c (get-ctx canvas)
@@ -42,5 +54,5 @@
 
     (start c world)))
 
-(defn reload! [] (restart "Code updated!"))
-(defn main [] (restart "App loaded!"))
+(defn reload! [] (run "Code updated!"))
+(defn main [] (run "App loaded!"))

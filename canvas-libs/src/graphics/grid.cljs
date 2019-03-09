@@ -1,5 +1,7 @@
 (ns graphics.grid
-  (:require [graphics.board :refer [to-pixels-point]]))
+  (:require [graphics.board :refer [to-pixels-point]]
+            [game.actions :as actions]
+            [graphics.sprites :as sprites]))
 
 (def fst #(get % 0))
 (def snd #(get % 1))
@@ -38,10 +40,13 @@
         board (:board wld)
         colW (:col-w wld)
         rowH (:row-h wld)
-        gamers (:gamers wld)]
-    (doall (for [pos gamers]
-                (let [A (to-pixels-point pos colW rowH)]
-                  (color-case c A colW rowH))))))
+        gamers (actions/all-gamers (:actions wld))
+        sBrute (:size sprites/BRUTE)]
+    (black c)
+    (.drawImage c (sprites/hit true) 0 0 sBrute sBrute 0 0 colW rowH)))
+    ;(doall (for [pos gamers]
+    ;         (let [A (to-pixels-point pos colW rowH)]
+    ;           (color-case c A colW rowH))))))
 
 (defn draw-grid
   "input: ctx and the world

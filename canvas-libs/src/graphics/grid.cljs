@@ -45,6 +45,9 @@
         rowH (:row-h wld)
         gamers (actions/all-gamers (:actions wld))
         sBrute (:size sprites/BRUTE)
+        sAdventurer (:size sprites/ADVENTURER)
+        wDwarf (:w sprites/DWARF)
+        hDwarf (:h sprites/DWARF)
         shownActions (:shown-actions wld)]
     (black c)
     (doall (for [action shownActions]

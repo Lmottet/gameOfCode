@@ -1,0 +1,115 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>There and back again : an unexpected journey</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="TechnologyPartner">
+
+  <script src="blockly_compressed.js"></script>
+  <script src="blocks_compressed.js"></script>
+  <script src="en.js"></script>
+</head>
+
+<body>
+  <div id="blocklyDiv" style="height: 700px; width: 800px;"></div>
+
+  <button onclick="printXml()">xmlify</button>
+
+  <xml id="toolbox" style="display: none">
+    <category name="Other">
+      <block type="math_number"></block>
+    </category>
+
+    <category name="Logic">
+      <block type="controls_if"></block>
+      <block type="controls_whileUntil"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_boolean"></block>
+    </category>
+
+    <category name="Movements">
+      <block type="move_forward"></block>
+      <block type="move_backward"></block>
+      <block type="move_left"></block>
+      <block type="move_right"></block>
+      <block type="move_center"></block>
+      <block type="move_closest_opponent"></block>
+    </category>
+
+    <category name="Actions">
+      <block type="approach_ennemy"></block>
+      <block type="flee_ennemy"></block>
+      <block type="attack_ennemy"></block>
+    </category>
+
+    <category name="Reflexion">
+      <block type="wet_feet"></block>
+      <block type="current_hitpoints"></block>
+    </category>
+  </xml>
+
+
+  <script>
+    var demoWorkspace = Blockly.inject('blocklyDiv',
+      {
+        media: 'media/',
+        toolbox: document.getElementById('toolbox'),
+        sounds: false
+      });
+
+    actionBlock('move_forward', 'Move forward', 'Tooltip');
+    actionBlock('move_backward', 'Move backward', 'Tooltip');
+    actionBlock('move_left', 'Move to the left', 'Tooltip');
+    actionBlock('move_right', 'Move to the right', 'Tooltip');
+    actionBlock('move_center', 'Move toward the center', 'Tooltip');
+    actionBlock('move_closest_opponent', 'Move toward the closest opponent', 'Tooltip');
+
+    actionBlock('approach_ennemy', 'Approach the closest ennemy', 'Tooltip');
+    actionBlock('flee_ennemy', 'Flee the closest ennemy', 'Tooltip');
+    actionBlock('attack_ennemy', 'Attack the closest ennemy', 'Tooltip');
+
+    questionBlock('wet_feet', 'Boolean', 'My feet are wet', 'Tooltip');
+    questionBlock('current_hitpoints', 'Number', 'My hit points', 'Tooltip');
+    questionBlock('closest_ennemy_attack_range', 'Boolean', 'The closest ennemy is in attack range', 'Tooltip');
+
+    function questionBlock(blockType, outputType, label, tooltip) {
+      Blockly.Blocks[blockType] = {
+        init: function () {
+          this.appendDummyInput().appendField(label);
+          this.setOutput(true, outputType)
+          this.setColour(160);
+          this.setTooltip(tooltip);
+        }
+      };
+    }
+
+
+    function actionBlock(blockType, label, tooltip) {
+      Blockly.Blocks[blockType] = {
+        init: function () {
+          this.setPreviousStatement(true);
+          this.appendDummyInput().appendField(label);
+          this.setColour(160);
+          this.setTooltip(tooltip);
+        }
+      };
+    }
+
+    function printXml() {
+      console.log(buildXml());
+    }
+
+    function buildXml() {
+      var xmlDom = Blockly.Xml.workspaceToDom(demoWorkspace);
+      return Blockly.Xml.domToPrettyText(xmlDom);
+    }
+
+  </script>
+</body>
+
+</html>

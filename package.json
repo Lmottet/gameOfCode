@@ -1,0 +1,15 @@
+{
+  "name": "showwatercup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cp -r node_modules/blockly/media/ target && cp node_modules/blockly/msg/js/en.js target && cp node_modules/blockly/blockly_compressed.js target && cp node_modules/blockly/blocks_compressed.js target && cp index.html target"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "blockly": "^1.0.0"
+  }
+}
